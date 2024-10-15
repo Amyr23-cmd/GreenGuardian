@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Green Guardian</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0">
+  </head>
+  <body>
+    <header>
+      <nav class="navbar">
+        <a class="logo" href="/">GreenGuardian<span>.</span></a>
+        <ul class="menu-links">
+          <span id="close-menu-btn" class="material-symbols-outlined">close</span>
+          <li><a href="/">Home</a></li>
+          <li><a href="/recdisease">Recognise Disease</a></li>
+          <li><a href="/abtus">About Us</a></li>
+          <li><a href="/feedback">Feedback</a></li>
+        </ul>
+        <span id="hamburger-btn" class="material-symbols-outlined">menu</span>
+      </nav>
+    </header>
+
+    <section class="hero-section">
+    <div class="container-abtus">
+      <section class="about">
+          <div class="about-image">
+              <img src="/static/images/abtus.jpg">
+          </div>
+          <div class="about-content">
+              <h2>The ‘Shazam’ for plant diseases</h2>
+              <p style="background-color: rgba(130, 130, 130, 0.6); padding: 10px; border-radius: 10px;">
+                At Green Guardian, our dedicated team is passionate about plant health and environmental well-being. 
+                With years of experience and expertise, we strive to provide comprehensive support for all your plant-related needs. 
+                Our user-friendly guides and visual resources are meticulously crafted to empower you in accurately identifying 
+                various plant diseases. Count on us to offer personalized recommendations tailored to your specific circumstances, 
+                ensuring that you have access to the most effective and safe solutions for disease management. 
+                Together, let's nurture healthier plants and a greener environment.
+            </p>
+            
+          </div>
+      </section>
+    </div>
+  </section>
+
+    <script>
+      const header = document.querySelector("header");
+      const hamburgerBtn = document.querySelector("#hamburger-btn");
+      const closeMenuBtn = document.querySelector("#close-menu-btn");
+
+      // Toggle mobile menu on hamburger button click
+      hamburgerBtn.addEventListener("click", () => header.classList.toggle("show-mobile-menu"));
+
+      // Close mobile menu on close button click
+      closeMenuBtn.addEventListener("click", () => hamburgerBtn.click());
+    </script>
+    
+  </body>
+</html>

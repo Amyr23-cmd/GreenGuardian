@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Green Guardian</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    <link
+            rel="stylesheet"
+            href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0"
+    />
+</head>
+<body>
+<header>
+    <nav class="navbar">
+        <a class="logo" href="/">GreenGuardian<span>.</span></a>
+        <ul class="menu-links">
+            <span id="close-menu-btn" class="material-symbols-outlined">close</span>
+            <li><a href="/">Home</a></li>
+          <li><a href="/recdisease">Recognise Disease</a></li>
+          <li><a href="/abtus">About Us</a></li>
+          <li><a href="/feedback">Feedback</a></li>
+        </ul>
+        <span id="hamburger-btn" class="material-symbols-outlined">menu</span>
+    </nav>
+</header>
+
+<section class="upload-image">
+    <div class="container">
+        <form id="uploadForm" action="/predict" method="post" enctype="multipart/form-data">
+            <input
+                    type="file"
+                    id="file"
+                    name="file"
+                    accept=".jpg, .jpeg, .png"
+                    style="display: none;"
+                    onchange="displaySelectedFileName()"
+            />
+            <div class="img-area" data-img="">
+                <i class='bx bxs-cloud-upload icon'></i>
+                <h3>Upload Image</h3>
+                <p>Image size must be less than <span>2MB</span></p>
+                <p>
+                    Select An Image Or <span id="selectedFileName">Drag And Drop</span>
+                </p>
+            </div>
+            <button class="select-image" type="button" onclick="selectImage()">Select Image</button>
+            <br>
+            <button class="select-image" type="submit" onclick="predictImage()">Predict</button>
+            <br>
+            <b><p id="prediction-result"></p></b>
+            <br>
+            <div id="treatments" style="display: none;">
+                <b><p class="treatments-title">Treatments/Prevention</p></b>
+            </div>
+        </form>
+    </div>
+</section>
+
+<script>
+      const header = document.querySelector("header");
+      const hamburgerBtn = document.querySelector("#hamburger-btn");
+      const closeMenuBtn = document.querySelector("#close-menu-btn");
+
+      // Toggle mobile menu on hamburger button click
+      hamburgerBtn.addEventListener("click", () => header.classList.toggle("show-mobile-menu"));
+
+      // Close mobile menu on close button click
+      closeMenuBtn.addEventListener("click", () => hamburgerBtn.click());
+
+    document.addEventListener("DOMContentLoaded", function() {
+        const selectImage = document.querySelector('.select-image');
+        const inputFile = document.querySelector('#file');
+        const imgArea = document.querySelector('.img-area');
+
+        selectImage.addEventListener('click', function () {
+            inputFile.click();
+        });
+
+        inputFile.addEventListener('change', function () {
+            const image = this.files[0];
+            if (image.size < 2000000) {
+                displaySelectedFile(image);
+            } else {
+                alert("Image size more than 2MB");
+            }
+        });
+
+        // Drag and Drop functionality
+        imgArea.addEventListener('dragover', function(e) {
+            e.preventDefault();
+            this.classList.add('dragover');
+        });
+
+        imgArea.addEventListener('dragleave', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+        });
+
+        imgArea.addEventListener('drop', function(e) {
+            e.preventDefault();
+            this.classList.remove('dragover');
+            const file = e.dataTransfer.files[0];
+            if (file.size < 2000000) {
+                displaySelectedFile(file);
+
+                const inputFile = document.querySelector('#file');
+                const dataTransfer = new DataTransfer();
+                dataTransfer.items.add(file);
+                inputFile.files = dataTransfer.files;
+            } else {
+                alert("Image size more than 2MB");
+            }
+        });
+        
+
+        function displaySelectedFile(file) {
+            const reader = new FileReader();
+            reader.onload = ()=> {
+                const allImg = imgArea.querySelectorAll('img');
+                allImg.forEach(item=> item.remove());
+                const imgUrl = reader.result;
+                const img = document.createElement('img');
+                img.src = imgUrl;
+                imgArea.appendChild(img);
+                imgArea.classList.add('active');
+                imgArea.dataset.img = file.name;
+            }
+            reader.readAsDataURL(file);
+        }
+
+    function getTreatments(predictedClass) {
+        switch(predictedClass) {
+            case "Pepper Bell Bacterial Spot":
+                return [
+                    "Apply copper-based fungicides.",
+                    "Remove and destroy infected plants to prevent spread.",
+                    "Rotate crops to reduce disease pressure."
+                ];
+            case "Pepper Bell Healthy":
+                return [
+                    "Maintain proper watering and fertilization to promote plant health.",
+                    "Monitor for pests and diseases regularly.",
+                    "Provide adequate spacing between plants for good air circulation."
+                ];
+            case "Potato Early Blight":
+                return [
+                    "Apply fungicides containing chlorothalonil or mancozeb.",
+                    "Remove and destroy infected leaves and debris.",
+                    "Practice crop rotation to reduce disease recurrence."
+                ];
+            case "Potato Healthy":
+                return [
+                    "Practice proper crop rotation to prevent disease buildup.",
+                    "Ensure good soil drainage and avoid over-irrigation.",
+                    "Monitor for pests and diseases and take appropriate action if detected."
+                ];
+            case "Potato Late Blight":
+                return [
+                    "Apply fungicides containing chlorothalonil or metalaxyl.",
+                    "Remove and destroy infected plants and debris.",
+                    "Avoid overhead irrigation to reduce leaf wetness periods."
+                ];
+            case "Tomato Bacterial Spot":
+                return [
+                    "Apply copper-based fungicides.",
+                    "Practice crop rotation and avoid planting in areas with a history of the disease.",
+                    "Use disease-resistant tomato varieties."
+                ];
+            case "Tomato Early Blight":
+                return [
+                    "Apply fungicides containing chlorothalonil or copper.",
+                    "Mulch around plants to reduce soil splash onto leaves.",
+                    "Provide proper spacing between plants for air circulation."
+                ];
+            case "Tomato Healthy":
+                return [
+                    "Select disease-resistant tomato varieties.",
+                    "Maintain proper spacing between plants for good airflow.",
+                    "Monitor for pests and diseases regularly."
+                ];
+            case "Tomato Late Blight":
+                return [
+                    "Apply fungicides containing chlorothalonil or copper.",
+                    "Remove and destroy infected plants and debris.",
+                    "Avoid overhead irrigation to reduce leaf wetness periods."
+                ];
+            case "Tomato Leaf Mold":
+                return [
+                    "Apply fungicides containing chlorothalonil or mancozeb.",
+                    "Provide good air circulation by proper spacing and staking of plants.",
+                    "Avoid overhead watering to reduce humidity around the plant foliage."
+                ];
+            case "Tomato Mosaic Virus":
+                return [
+                    "Remove and destroy infected plants to prevent spread.",
+                    "Control aphids and other insect vectors.",
+                    "Plant virus-resistant tomato varieties."
+                ];
+            case "Tomato Septoria Leaf Spot":
+                return [
+                    "Apply fungicides containing chlorothalonil or copper.",
+                    "Remove and destroy infected leaves and debris.",
+                    "Practice crop rotation and avoid overhead irrigation."
+                ];
+            case "Tomato Spider Mites Two Spotted Spider Mite":
+                return [
+                    "Use miticides to control spider mites.",
+                    "Increase humidity levels to discourage mite activity.",
+                    "Remove and destroy heavily infested plant parts."
+                ];
+            case "Tomato Target Spot":
+                return [
+                    "Apply fungicides containing chlorothalonil or mancozeb.",
+                    "Remove and destroy infected plant debris.",
+                    "Provide good air circulation and avoid overcrowding plants."
+                ];
+            case "Tomato Yellow Leaf Curl Virus":
+                return [
+                    "Control whiteflies and other insect vectors.",
+                    "Remove and destroy infected plants to prevent spread.",
+                    "Plant virus-resistant tomato varieties."
+                ];
+            default:
+                return [];
+        }
+    }
+
+    document.querySelector('#uploadForm').addEventListener('submit', function(event) {
+        event.preventDefault(); // prevent the form from being submitted normally
+
+        const fileInput = document.querySelector('#file');
+        console.log('File Selected: ', fileInput.files[0]);
+        const formData = new FormData(document.getElementById('uploadForm'));
+
+        fetch('/predict', {
+            method: 'POST',
+            body: formData,
+        })
+        .then(response => response.json())
+        .then(data => {
+            const results = data.results;
+            const predictionResult = document.querySelector('#prediction-result');
+            const treatmentsDiv = document.querySelector('#treatments');
+
+            predictionResult.innerHTML = ''; // Clear previous results
+            treatmentsDiv.innerHTML = ''; // Clear previous treatments
+
+            // Find the result with the highest confidence
+            let highestConfidenceResult = results[0];
+            for (let i = 1; i < results.length; i++) {
+                if (results[i].confidence > highestConfidenceResult.confidence) {
+                    highestConfidenceResult = results[i];
+                }
+            }
+
+            const predictedClass = highestConfidenceResult.class;
+            const confidence = highestConfidenceResult.confidence;
+            const treatments = getTreatments(predictedClass);
+
+            const classParagraph = document.createElement('p');
+            classParagraph.innerHTML = `Class: ${predictedClass}<br>Confidence: ${confidence.toFixed(2)}%`;
+            predictionResult.appendChild(classParagraph);
+
+            const treatmentsTitle = document.createElement('p');
+            treatmentsTitle.textContent = 'Treatments/Prevention';
+            treatmentsTitle.classList.add('treatments-title'); 
+            treatmentsDiv.appendChild(treatmentsTitle);
+
+            const treatmentsList = document.createElement('ul');
+            treatments.forEach(treatment => {
+                const treatmentItem = document.createElement('li');
+                treatmentItem.textContent = treatment;
+                treatmentsList.appendChild(treatmentItem);
+            });
+            treatmentsDiv.appendChild(treatmentsList);
+
+            treatmentsDiv.style.display = 'block'; // Show the treatments section
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    });
+});    
+</script>
+
+
+</body>
+</html>
