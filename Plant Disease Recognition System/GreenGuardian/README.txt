@@ -1,6 +1,3 @@
-NAME  : Amir
-EMAIL : amirmstqm412@gmail.com
-
 1. Run requirement.txt
 
     pip install -r requirement.txt
