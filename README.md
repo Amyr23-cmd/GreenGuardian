@@ -5,7 +5,7 @@ This project utilizes Convolutional Neural Network (CNNs) to identify plant dise
 
 ![Alt Text](https://github.com/Amyr23-cmd/GreenGuardian/blob/01859c8e789f1286e037e7c74c9187490bd6fd13/Plant%20Disease%20Recognition%20System/GreenGuardian/SystemImg/index.png)
 
-![Alt Text](
+![Alt Text](https://github.com/Amyr23-cmd/GreenGuardian/blob/5b12d57cfaefe8ee4a3552b3797e2d14b72a73d1/Plant%20Disease%20Recognition%20System/GreenGuardian/SystemImg/greenguardian.png)
 
 
 
