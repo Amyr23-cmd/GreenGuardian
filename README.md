@@ -1,8 +1,6 @@
 # GreenGuardian
 Plant Disease Recognition System Using CNN
 
-NAME  : Amir
-EMAIL : amirmstqm412@gmail.com
 
 1. Run requirement.txt
 
